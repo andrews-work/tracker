@@ -6,7 +6,7 @@
             <div v-for="list in todoList" :key="list.id" class="todo-list">
 
                 <!-- card -->
-                <div v-if="!showSettings" :class="['p-4','border',`border-${list.borderColor}`,`bg-${list.bgColor}`,'rounded-lg','shadow-md','flex','flex-col','space-y-','w-[15vw]','h-[40vh]','relative']">
+                <div v-if="!showSettings" :class="['p-4','border',`border-${list.borderColor}`,`bg-${list.bgColor}`,'rounded-lg','shadow-md','flex','flex-col','space-y-','w-[20vw]','h-[50vh]','relative']">
 
                     <!-- nav -->
                     <div class="min-h-[2vh] flex justify-between items-center">
@@ -29,10 +29,10 @@
                     </div>
 
                     <!-- list items -->
-                    <div class="min-h-[25vh] overflow-y-scroll">
+                    <div class="min-h-[34vh] overflow-y-scroll">
                         <h2 class="text-sm">
                             <ul class="flex flex-col space-y-2">
-                                <li v-for="item in list.items" :key="item" class="w-full border-b border-grey-100">{{ item }}</li>
+                                <li v-for="item in list.items" :key="item" class="w-full border-b border-grey-100 pb-2">{{ item }}</li>
                             </ul>
                         </h2>
                     </div>
