@@ -4,41 +4,94 @@
     <div class="todo-container">
         <div class="todo-list-wrapper">
             <div v-for="list in todoList" :key="list.id" class="todo-list">
-                <div :class="['p-4','border',`border-${list.borderColor}`,`bg-${list.bgColor}`,'rounded-lg','shadow-md','flex','flex-col','space-y-2','w-[15vw]','h-[40vh]','relative']">
-                    <div class="border border-grey-400 h-[5vh]">
+
+                <!-- card -->
+                <div v-if="!showSettings" :class="['p-4','border',`border-${list.borderColor}`,`bg-${list.bgColor}`,'rounded-lg','shadow-md','flex','flex-col','space-y-2','w-[15vw]','h-[40vh]','relative']">
+
+                    <!-- nav -->
+                    <div class="h-auto flex justify-between items-center">
+                        <!-- delete list icon -->
+                        <div>
+                            <font-awesome-icon :icon="['fas', 'trash']" @click="deleteList(list.id)" />
+                        </div>
+
+                        <!-- show settings icon -->
+                        <div>
+                            <button @click="showSettings = !showSettings">
+                                <font-awesome-icon :icon="['fas', 'gear']" />
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- name -->
+                    <div class="border-b border-grey-300 pb-2 h-[5vh] flex items-center justify-center">
                         <h2 class="text-xl">{{ list.name }}</h2>
                     </div>
-                    <div class="border border-grey-400 h-auto">
+
+                    <!-- list items -->
+                    <div class=" h-auto">
                         <h2 class="text-xl">
                             <ul class="flex flex-col space-y-2">
                                 <li v-for="word in list.items.split(' ')" :key="word" class="w-full">{{ word }}</li>
                             </ul>
                         </h2>
                     </div>
+
                 </div>
+
+                    <!-- card settings -->
+                    <div v-if="showSettings" :class="['p-4','border',`border-${list.borderColor}`,`bg-${list.bgColor}`,'rounded-lg','shadow-md','flex','flex-col','space-y-2','w-[15vw]','h-[40vh]','relative']">
+
+                    <!-- color? -->
+                    <div class="border border-grey-400 h-[5vh] flex items-center justify-center">
+                    </div>
+
+                    <!-- folder? -->
+                    <div class="border border-grey-400 h-auto">
+                        <h2 class="text-xl">
+                        </h2>
+                    </div>
+
+                    <!-- folder? -->
+                    <div class="border border-grey-400 h-auto">
+                        <h2 class="text-xl">
+                        </h2>
+                    </div>
+
+                    <!-- settings button -->
+                    <button @click="showSettings = !showSettings">Hide Settings</button>
+
+                </div>
+
             </div>
         </div>
     </div>
 </template>
 
-
 <script setup>
+    import { ref } from 'vue';
+    import { library } from '@fortawesome/fontawesome-svg-core';
+    import { faTrash, faGear } from '@fortawesome/free-solid-svg-icons';
+    import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-defineProps({
-  todoList: Array,
-});
+    library.add(faTrash, faGear);
 
-const deleteList = (id) => {
-  todoList.destroy(`/todoList/${id}`)
-    .then(() => {
-      // Remove the deleted list from the UI
-      todoList.value = todoList.value.filter(list => list.id !== id);
-    })
-    .catch(error => {
-      console.error(error);
+    defineProps({
+        todoList: Array,
     });
-};
 
+    const showSettings = ref(false);
+
+    const deleteList = (id) => {
+        todoList.destroy(`/todoList/${id}`)
+            .then(() => {
+              // Remove the deleted list from the UI
+              todoList.value = todoList.value.filter(list => list.id !== id);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+    };
 </script>
 
 <style scoped>
@@ -59,13 +112,3 @@ const deleteList = (id) => {
     min-width: fit-content; /* Ensures each list only takes up the necessary width */
   }
 </style>
-
-
-<!-- <button
-                    @click="deleteList(list.id)"
-                    class="absolute top-0 right-0 m-2 text-red-500 hover:text-red-700"
-                  >
-                    X
-                  </button>
-                  
-                   -->
