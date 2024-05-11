@@ -19,7 +19,24 @@
     fetch('/todoList')
         .then(response => response.json())
         .then(data => {
-            todoList.value = data
+            todoList.value = data.map(list => {
+                let items = []
+
+                if (typeof list.items === 'string') {
+                    try {
+                        items = JSON.parse(list.items)
+                    } catch (error) {
+                        console.error(error)
+                    }
+                } else if (Array.isArray(list.items)) {
+                    items = list.items
+                }
+
+                return {
+                    ...list,
+                    items
+                }
+            })
         })
         .catch(error => {
             console.error(error)

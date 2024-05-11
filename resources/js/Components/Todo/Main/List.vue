@@ -6,41 +6,53 @@
             <div v-for="list in todoList" :key="list.id" class="todo-list">
 
                 <!-- card -->
-                <div v-if="!showSettings" :class="['p-4','border',`border-${list.borderColor}`,`bg-${list.bgColor}`,'rounded-lg','shadow-md','flex','flex-col','space-y-2','w-[15vw]','h-[40vh]','relative']">
+                <div v-if="!showSettings" :class="['p-4','border',`border-${list.borderColor}`,`bg-${list.bgColor}`,'rounded-lg','shadow-md','flex','flex-col','space-y-','w-[15vw]','h-[40vh]','relative']">
 
                     <!-- nav -->
-                    <div class="h-auto flex justify-between items-center">
+                    <div class="min-h-[2vh] flex justify-between items-center">
                         <!-- delete list icon -->
                         <div>
-                            <font-awesome-icon :icon="['fas', 'trash']" @click="deleteList(list.id)" />
+                            <font-awesome-icon class="trash-icon" :icon="['fas', 'trash']" @click="deleteList(list.id)" />
                         </div>
 
                         <!-- show settings icon -->
                         <div>
                             <button @click="showSettings = !showSettings">
-                                <font-awesome-icon :icon="['fas', 'gear']" />
+                                <font-awesome-icon class="settings-icon" :icon="['fas', 'gear']" />
                             </button>
                         </div>
                     </div>
 
                     <!-- name -->
-                    <div class="border-b border-grey-300 pb-2 h-[5vh] flex items-center justify-center">
-                        <h2 class="text-xl">{{ list.name }}</h2>
+                    <div class="min-h-[5vh] pb-2 flex items-center justify-center">
+                        <h2 class="text-lg">{{ list.name }}</h2>
                     </div>
 
                     <!-- list items -->
-                    <div class=" h-auto">
-                        <h2 class="text-xl">
+                    <div class="min-h-[25vh] overflow-y-scroll">
+                        <h2 class="text-sm">
                             <ul class="flex flex-col space-y-2">
-                                <li v-for="word in list.items.split(' ')" :key="word" class="w-full">{{ word }}</li>
+                                <li v-for="item in list.items" :key="item" class="w-full border-b border-grey-100">{{ item }}</li>
                             </ul>
+                        </h2>
+                    </div>
+
+                    <!-- folder path-->
+                    <div class="min-h-[5vh] py-2 pt-4 flex items-center justify-center">
+                        <FontAwesomeIcon :icon="faFolder" class="mr-2" />
+                        <h2 class="text-sm pr-2">
+                            Personal ->
+                        </h2>
+                        <FontAwesomeIcon :icon="faFolder" class="mr-2" />
+                        <h2 class="text-sm">
+                            Car
                         </h2>
                     </div>
 
                 </div>
 
-                    <!-- card settings -->
-                    <div v-if="showSettings" :class="['p-4','border',`border-${list.borderColor}`,`bg-${list.bgColor}`,'rounded-lg','shadow-md','flex','flex-col','space-y-2','w-[15vw]','h-[40vh]','relative']">
+                <!-- card settings -->
+                <div v-if="showSettings" :class="['p-4','border',`border-${list.borderColor}`,`bg-${list.bgColor}`,'rounded-lg','shadow-md','flex','flex-col','space-y-2','w-[15vw]','h-[40vh]','relative']">
 
                     <!-- color? -->
                     <div class="border border-grey-400 h-[5vh] flex items-center justify-center">
@@ -69,29 +81,48 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { ref, defineProps } from 'vue';
     import { library } from '@fortawesome/fontawesome-svg-core';
-    import { faTrash, faGear } from '@fortawesome/free-solid-svg-icons';
+    import { faTrash, faGear, faFolder } from '@fortawesome/free-solid-svg-icons';
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-    library.add(faTrash, faGear);
+    library.add(faTrash, faGear, faFolder);
 
-    defineProps({
+    const props = defineProps({
         todoList: Array,
     });
 
     const showSettings = ref(false);
 
-    const deleteList = (id) => {
-        todoList.destroy(`/todoList/${id}`)
-            .then(() => {
-              // Remove the deleted list from the UI
-              todoList.value = todoList.value.filter(list => list.id !== id);
-            })
-            .catch(error => {
-              console.error(error);
+    const deleteList = async (id) => {
+        console.log(`Delete list with ID ${id}`);
+
+        // Log the props to check if todoList is defined
+        console.log("Props:", props);
+
+        // Use props.todoList instead of todoList
+        try {
+            const response = await fetch(`/todoList/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+                }
             });
+
+            if (response.ok) {
+                console.log(`Deleted list with ID ${id}`);
+
+                // Emit an event to notify the parent component that the delete was successful
+                emit('list-deleted', id);
+            } else {
+                console.error(`Error ${response.status} deleting list ${id}`);
+            }
+        } catch (error) {
+            console.error("Error deleting list:", error);
+        }
     };
+
+
 </script>
 
 <style scoped>
@@ -111,4 +142,23 @@
   .todo-list {
     min-width: fit-content; /* Ensures each list only takes up the necessary width */
   }
+
+  .trash-icon {
+    cursor: pointer; /* This will change the cursor to a pointer when hovering */
+    transition: color 0.2s ease; /* This will add a transition effect when changing the color */
+  }
+
+  .trash-icon:hover {
+    color: red; /* This will change the color to red when hovering */
+  }
+
+  .settings-icon {
+    cursor: pointer; /* This will change the cursor to a pointer when hovering */
+    transition: color 0.2s ease; /* This will add a transition effect when changing the color */
+  }
+
+  .settings-icon:hover {
+    color: rgb(135, 135, 135); /* This will change the color to red when hovering */
+  }
+
 </style>

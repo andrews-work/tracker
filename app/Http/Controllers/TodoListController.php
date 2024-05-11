@@ -57,10 +57,11 @@ class TodoListController extends Controller {
     }
 
     // delete
-    public function destroy(TodoList $todoList){
-        
+    public function destroy(TodoList $todoList) {
+        log::info('-----------------------');
+        log::info('TodoList Controller - delete list');
         $todoList->delete();
-
         return redirect()->route('todoList.show')->with('success', 'Todo list deleted successfully.');
     }
+    
 }

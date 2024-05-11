@@ -1,7 +1,7 @@
 <!-- resources/js/Components/Todo/Main/ShowList.vue -->
 
 <template>
-<div class="flex space-y-4 py-4">
+<div class="flex space-y-4 py-4 overflow-x-scroll">
   <List :todo-list="todoList" />
 </div>
 
