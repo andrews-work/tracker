@@ -33,6 +33,9 @@ class TodoListController extends Controller {
             'date' => 'nullable|date',
             'color' => 'nullable|string',
             'items' => 'required|array',
+            'folder' => 'nullable|string|max:255',
+            'subFolder' => 'nullable|string|max:255',
+            'tag' => 'nullable|string|max:255',
             'user_id' => 'exists:users,id',
         ]);
         $validatedData['user_id'] = Auth::user()->id;
@@ -46,8 +49,12 @@ class TodoListController extends Controller {
             'date' => $validatedData['date'] ?? null,
             'color' => $validatedData['color'] ?? null,
             'items' => json_encode($validatedData['items']),
+            'folder' => $validatedData['folder'] ?? null,
+            'subFolder' => $validatedData['subFolder'] ?? null,
+            'tag' => $validatedData['tag'] ?? null,
             'user_id' => $validatedData['user_id'],
         ]);
+        
 
         Log::info('TodoList created successfully with ID: ' . $todoList->id);
         session()->flash('success', 'Todo list created successfully.');

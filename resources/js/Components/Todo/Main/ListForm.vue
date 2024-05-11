@@ -60,6 +60,37 @@
                             </p>
                         </div>
                     </div>
+
+                    <!-- folder -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-bold mb-2" for="folder">
+                            Folder
+                        </label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="folder" type="text" v-model="form.folder">
+                    </div>
+
+                    <!-- subFolder -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-bold mb-2" for="subFolder">
+                            SubFolder
+                        </label>
+                        <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="subFolder" v-model="form.subFolder">
+                            <option value="">Select a subfolder</option>
+                            <option v-for="option in subFolderOptions" :key="option" :value="option">
+                                {{ option }}
+                            </option>
+                        </select>
+                    </div>
+
+
+                    <!-- tag -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-bold mb-2" for="tag">
+                            Tag
+                        </label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="tag" type="text" v-model="form.tag">
+                    </div>
+
                 </div>
 
                 <!-- Right section -->
@@ -89,8 +120,8 @@
                         Submit
                     </button>
                     <button type="button" @click="$emit('cancel')" class="bg-red-500 hover text-white font-bold py-2 px-4 rounded focus focus">
-    Cancel
-</button>
+                        Cancel
+                    </button>
 
                 </div>
             </form>
@@ -110,6 +141,9 @@
             importance: '',
             date: '',
             color: '',
+            folder: '',
+            subFolder: '',
+            tag: '',
             items: [],
             })
 
@@ -166,6 +200,9 @@
                 form.date = '';
                 form.color = '';
                 form.items = [];
+                form.folder = '';
+                form.subFolder = '';
+                form.tag = '';
                 newItem.value = '';
             };
 

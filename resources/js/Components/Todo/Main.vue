@@ -1,13 +1,16 @@
 <!-- resources/js/Components/Todo/Main.vue -->
 
 <script setup>
-import { inject, defineProps, watch } from 'vue'
+import { inject, defineProps, watch, ref } from 'vue'
 import ListForm from './Main/ListForm.vue';
 import ShowList from './Main/ShowList.vue';
 import ListNav from './Main/ListNav.vue';
+import SelectLists from './Main/SelectLists.vue';
+import ListTitle from './Main/ListTitle.vue';
 
 const showListForm = inject('showListForm')
 const showShowList = inject('showShowList')
+const showSelectLists = inject('showSelectLists')
 
 const handleCancel = () => {
   showListForm.value = false
@@ -17,6 +20,8 @@ const handleCancel = () => {
 defineProps({
   todoList: Array,
 })
+
+const categories = ref(['personal', 'friends', 'family', 'business'])
 </script>
 
 <template>
@@ -30,6 +35,9 @@ defineProps({
                 <div class="max-w-8xl mx-auto sm:px-4 lg:px-8">
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-4 flex flex-col">
+                          <div class="mb-4">
+                                <ListTitle />
+                            </div>
                             <div class="mb-4">
                                 <ListNav />
                             </div>
@@ -39,10 +47,22 @@ defineProps({
                 </div>
             </div>
         </div>
+        <div v-if="showSelectLists">
+            <div class="py-12">
+                <div class="max-w-8xl mx-auto sm:px-4 lg:px-8">
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-4 flex flex-col">
+                            <div class="mb-4">
+                                <SelectLists :todoList="todoList" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
       </div>
     </div>
   </template>
-  
 
 <script>
     export default {

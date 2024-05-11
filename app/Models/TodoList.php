@@ -17,6 +17,9 @@ class TodoList extends Model {
         'date',
         'color',
         'items',
+        'tag',
+        'folder',
+        'subFolder',
         'user_id',
     ];
 }
