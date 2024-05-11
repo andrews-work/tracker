@@ -41,7 +41,7 @@
                     <div class="min-h-[5vh] py-2 pt-4 flex items-center justify-center">
                         <FontAwesomeIcon :icon="faFolder" class="mr-2" />
                         <h2 class="text-sm pr-2">
-                            Personal ->
+                            Personal >
                         </h2>
                         <FontAwesomeIcon :icon="faFolder" class="mr-2" />
                         <h2 class="text-sm">

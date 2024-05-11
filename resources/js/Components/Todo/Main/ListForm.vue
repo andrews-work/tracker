@@ -1,5 +1,3 @@
-<!-- resources/js/Components/Todo/Main/ListForm.vue -->
-
 <template>
     <div class="max-w-8xl mx-auto sm:px-6 lg:px-8 max-w-full max-h-full bg-black-100">
         <div class="p-6">
@@ -90,68 +88,63 @@
                     <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2">
                         Submit
                     </button>
-                    <button type="button" @click="cancel" class="bg-red-500 hover text-white font-bold py-2 px-4 rounded focus focus">
-                        Cancel
-                    </button>
+                    <button type="button" @click="$emit('cancel')" class="bg-red-500 hover text-white font-bold py-2 px-4 rounded focus focus">
+    Cancel
+</button>
+
                 </div>
             </form>
         </div>
-    </div> 
+    </div>
 </template>
-  
-<script> 
+
+<script>
     import { ref, onMounted } from 'vue'
     import { useForm } from '@inertiajs/vue3';
 
     export default {
-    setup(props) {
-        const form = useForm({
-        name: '',
-        category: '',
-        importance: '',
-        date: '',
-        color: '',
-        items: [],
-        })
+        setup(props) {
+            const form = useForm({
+            name: '',
+            category: '',
+            importance: '',
+            date: '',
+            color: '',
+            items: [],
+            })
 
-        const nameInput = ref(null)
-        const categorySelect = ref(null)
+            const nameInput = ref(null)
+            const categorySelect = ref(null)
 
-        onMounted(() => {
-            nameInput.value = document.querySelector('#name')
-            categorySelect.value = document.querySelector('#category')
-        })
+            onMounted(() => {
+                nameInput.value = document.querySelector('#name')
+                categorySelect.value = document.querySelector('#category')
+            })
 
-        const createList = () => {
-            if (!nameInput.value.checkValidity()) {
-                nameInput.value.reportValidity();
-                return;
-            }
-
-            if (categorySelect.value.value === '') {
-                alert('Please select a category');
-                return;
-            }
-
-            form.post('/todoList', {
-                onSuccess: () => {
-                    console.log('List created successfully');
-                    router.push('/todo');
-                },
-                onError: (errors) => {
-                    console.error(errors);
+            const createList = () => {
+                if (!nameInput.value.checkValidity()) {
+                    nameInput.value.reportValidity();
+                    return;
                 }
-            });
-        };
 
+                if (categorySelect.value.value === '') {
+                    alert('Please select a category');
+                    return;
+                }
 
-
-            // cancel form
-            const cancel = () => { 
-            } 
+                form.post('/todoList', {
+                    onSuccess: () => {
+                        console.log('List created successfully');
+                        router.push('/todo');
+                    },
+                    onError: (errors) => {
+                        console.error(errors);
+                    }
+                });
+            };
 
             // add new item
-            const newItem = ref('') 
+            const newItem = ref('')
             const addItem = (event) => {
                 if (newItem.value.trim()) {
                     form.items.push(newItem.value.trim());
@@ -161,21 +154,30 @@
             }
 
             // remove item
-            const removeItem = (index) => { 
-                form.items.splice(index, 1); 
-            } 
+            const removeItem = (index) => {
+                form.items.splice(index, 1);
+            }
 
-            // show?
-            return { 
-                form, 
-                createList, 
-                categories: props.categories, 
-                cancel, 
-                newItem, 
-                addItem, 
-                removeItem, 
-            } 
+            // cancel form
+            const cancel = () => {
+                form.name = '';
+                form.category = '';
+                form.importance = '';
+                form.date = '';
+                form.color = '';
+                form.items = [];
+                newItem.value = '';
+            };
+
+            return {
+                form,
+                createList,
+                categories: props.categories,
+                cancel,
+                newItem,
+                addItem,
+                removeItem,
+            }
         },
-    } 
+    }
 </script>
-
