@@ -16,6 +16,8 @@ class AuthenticatedSessionController extends Controller {
     
     // Display the login view.
     public function create(): Response {
+        Log::info('--------------------');
+        Log::info('Authentication Session Controller - display login');
         
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
