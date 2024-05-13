@@ -20,25 +20,36 @@
   
             <!-- name -->
             <div class="min-h-[5vh] pb-2 flex items-center justify-center">
-              <h2 class="text-lg text-underline">{{ list.name }}</h2>
+
+                <div v-if="!list.editingName" @click="list.editingName = true">
+                    <h2 class="text-lg text-underline">{{ list.name }}</h2>
+                </div>
+
+                <div v-else>
+                    <input
+                        v-model="list.name"
+                        @blur="list.editingName = false"
+                        @keyup.enter="saveChanges(list)"
+                    />
+                </div>
             </div>
   
             <!-- list items -->
             <div class="min-h-[24vh] overflow-y-scroll">
-              <div v-for="(item, itemIndex) in list.items" :key="itemIndex">
-                <!-- Add the 'editing' property here -->
-                <div v-if="!list.items[itemIndex].editing" @click="list.items[itemIndex].editing = !list.items[itemIndex].editing">
-                  {{ item }}
+                <div v-for="(item, itemIndex) in list.items" :key="itemIndex">
+                    <!-- Add the 'editing' property here -->
+                    <div v-if="!list.items[itemIndex].editing" @click="list.items[itemIndex].editing = !list.items[itemIndex].editing">
+                    {{ item }}
+                    </div>
+    
+                    <div v-else>
+                    <input
+                        v-model="list.items[itemIndex].value"
+                        @blur="list.items[itemIndex].editing = !list.items[itemIndex].editing"
+                        @keyup.enter="saveChanges(list, itemIndex, item.value)"
+                    />
+                    </div>
                 </div>
-  
-                <div v-else>
-                  <input
-                    v-model="list.items[itemIndex].value"
-                    @blur="list.items[itemIndex].editing = !list.items[itemIndex].editing"
-                    @keyup.enter="saveChanges(list, itemIndex, item.value)"
-                  />
-                </div>
-              </div>
             </div>
   
             <!-- folder path-->
