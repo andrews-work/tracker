@@ -18,12 +18,18 @@ return new class extends Migration {
             $table->date('date');
             $table->string('color');
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
     // Reverse the migrations.
     public function down(): void {
+
+        dd('down method called');
+        Schema::table('todoList', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+        });
+    
         Schema::dropIfExists('todoList');
     }
 };

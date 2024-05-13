@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Log;
 
 class AuthenticatedSessionController extends Controller {
     
@@ -24,6 +25,9 @@ class AuthenticatedSessionController extends Controller {
 
     // Handle an incoming authentication request.
     public function store(LoginRequest $request): RedirectResponse {
+
+        Log::info('--------------------');
+        Log::info('Authentication Session Controller - Login');
         $request->authenticate();
         $request->session()->regenerate();
 
