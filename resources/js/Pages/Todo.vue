@@ -9,10 +9,12 @@
     const showListForm = ref(false)
     const showShowList = ref(true)
     const showSelectList = ref(false)
+    const selectedCategory = ref(null)
 
     provide('showListForm', showListForm)
     provide('showShowList', showShowList)
-    provide('showSelectList', showSelectList)
+    provide('showSelectLists', showSelectList)
+    provide('selectedCategory', selectedCategory) 
 
     const todoList = ref([])
 
@@ -43,6 +45,8 @@
             console.error(error)
         })
     })
+
+    
 </script>
 
 <template>

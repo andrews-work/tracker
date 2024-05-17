@@ -180,8 +180,20 @@
   };
   
   // update list
+  const todoListCopy = ref(JSON.parse(JSON.stringify(props.todoList)));
+
   const saveChanges = async (list, itemIndex, originalValue) => {
-  
+    // Modify the local copy of the todoList instead of the prop
+    const updatedItems = todoListCopy.value.map((item, index) => {
+      if (index === itemIndex) {
+        return {
+          ...item,
+          value: item.value.trim() || originalValue // If the new value is only whitespace, use the original value
+        };
+      }
+      return item;
+    });
+
     // Send request to controller
     try {
       const response = await fetch(`/api/lists/${list.id}`, {
@@ -191,11 +203,11 @@
         },
         body: JSON.stringify({
           // Include the updated data in the request body
-          // For example, if you're only updating the item value:
-          items: list.items
+          name: list.name,
+          items: updatedItems
         })
       });
-  
+
       if (response.ok) {
         console.log('List updated successfully');
       } else {
