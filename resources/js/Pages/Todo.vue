@@ -10,13 +10,14 @@
     const showShowList = ref(true)
     const showSelectList = ref(false)
     const selectedCategory = ref(null)
+    const selectedSidebarButton = ref('showLists');
+    const todoList = ref([])
 
     provide('showListForm', showListForm)
     provide('showShowList', showShowList)
     provide('showSelectLists', showSelectList)
     provide('selectedCategory', selectedCategory) 
-
-    const todoList = ref([])
+    provide('todoList', todoList)  
 
     onMounted(() => {
     fetch('/todoList')
@@ -45,8 +46,6 @@
             console.error(error)
         })
     })
-
-    
 </script>
 
 <template>

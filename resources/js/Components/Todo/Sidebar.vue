@@ -66,6 +66,8 @@ const showListForm = inject('showListForm')
 const showShowList = inject('showShowList')
 const showSelectLists = inject('showSelectLists')
 const categories = ref(['personal', 'friends', 'family', 'business'])
+const selectedCategory = inject('selectedCategory')
+const todoList = inject('todoList')
 
 const onClickListForm = () => {
   showListForm.value = true
@@ -99,6 +101,7 @@ const filterListsByFolder = (folder) => {
   showSelectLists.value = true
   showShowList.value = false
   showListForm.value = false
+  selectedCategory.value = { type: 'folder', value: folder } 
   console.log(`Filter lists by folder: ${folder}`)
 }
 
@@ -134,6 +137,4 @@ onMounted(() => {
       console.error(error)
     })
 })
-
 </script>
-
