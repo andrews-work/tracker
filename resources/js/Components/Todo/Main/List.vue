@@ -115,41 +115,44 @@
   </template>
   
   <script setup>
-  import { ref, defineProps, onMounted, watch } from 'vue';
-  import { library } from '@fortawesome/fontawesome-svg-core';
-  import { faTrash, faGear, faFolder, faTag, faExclamation } from '@fortawesome/free-solid-svg-icons';
-  import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-  
-  library.add(faTrash, faGear, faFolder, faTag, faExclamation);
-  
-  const props = defineProps({
-    todoList: Array,
-  });
-  
-  const importanceColors = {
-    high: 'red',
-    middle: 'orange',
-    low: 'blue',
-  };
-  
-  const getImportanceColor = (importance) => {
-    return importanceColors[(importance || '').toLowerCase()] || 'black';
+import { ref, defineProps, onMounted, watch } from 'vue';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faTrash, faGear, faFolder, faTag, faExclamation } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-  };
-  
-  const initShowSettings = () => {
-    props.todoList.forEach(list => {
-      list.showSettings = false;
-    });
-  };
-  
-  onMounted(() => {
-    initShowSettings();
+library.add(faTrash, faGear, faFolder, faTag, faExclamation);
+
+const props = defineProps({
+  todoList: Array,
+});
+
+// Don't overwrite the todoList prop, use a different name for the ref
+const todoListWithSettings = ref(props.todoList.map(list => ({ ...list, showSettings: false })));
+
+const importanceColors = {
+  high: 'red',
+  middle: 'orange',
+  low: 'blue',
+};
+
+const getImportanceColor = (importance) => {
+  return importanceColors[(importance || '').toLowerCase()] || 'black';
+
+};
+
+const initShowSettings = () => {
+  todoListWithSettings.value.forEach(list => {
+    list.showSettings = false;
   });
-  
-  watch(() => props.todoList, () => {
-    initShowSettings();
-  }, { deep: true });
+};
+
+onMounted(() => {
+  initShowSettings();
+});
+
+watch(() => props.todoList, () => {
+  todoListWithSettings.value = props.todoList.map(list => ({ ...list, showSettings: false }));
+}, { deep: true });
   
   const deleteList = async (id) => {
     console.log(`Delete list with ID ${id}`);
