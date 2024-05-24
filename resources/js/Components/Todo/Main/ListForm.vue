@@ -1,7 +1,7 @@
 <template>
     <div class="max-w-8xl mx-auto sm:px-6 lg:px-8 max-w-full max-h-full bg-black-100">
-        <div class="p-6">
-            <form @submit.prevent="createList(form)" class="grid grid-cols-2 gap-4">
+        <div class="p-6 overflow-y-scroll">
+            <form @submit.prevent="createList(form)" class="grid grid-cols-2 gap-4 ">
                 <!-- Left section -->
                 <div>
                     <!-- name -->
@@ -66,22 +66,31 @@
                         <label class="block text-gray-700 font-bold mb-2" for="folder">
                             Folder
                         </label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="folder" type="text" v-model="form.folder">
+                        <input list="folderOptions" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="folder" type="text" v-model="form.folder">
+                        <datalist id="folderOptions">
+                            <option v-for="option in folderOptions" :key="option" :value="option">
+                                {{ option }}
+                            </option>
+                        </datalist>
                     </div>
 
                     <!-- subFolder -->
-                    <div class="mb-4">
+                    <div class="mb-4" v-if="form.folder">
                         <label class="block text-gray-700 font-bold mb-2" for="subFolder">
                             SubFolder
                         </label>
                         <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="subFolder" v-model="form.subFolder">
                             <option value="">Select a subfolder</option>
-                            <option v-for="option in subFolderOptions" :key="option" :value="option">
+                            <option v-for="option in getSubFolderOptions(form.folder)" :key="option" :value="option">
                                 {{ option }}
                             </option>
+                            <option value="new">Add New</option>
                         </select>
+                        <div v-if="form.subFolder === 'new'">
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="newSubFolder" type="text" v-model="newSubFolder">
+                            <button @click="addNewSubFolder">Add</button>
+                        </div>
                     </div>
-
 
                     <!-- tag -->
                     <div class="mb-4">
@@ -130,10 +139,51 @@
 </template>
 
 <script>
-    import { ref, onMounted } from 'vue'
-    import { useForm } from '@inertiajs/vue3';
+import { ref, onMounted } from 'vue'
+import { useForm } from '@inertiajs/vue3';
 
-    export default {
+export default {
+    data() {
+        return {
+            newSubFolder: '',
+            folderOptions: [], // define folderOptions as an empty array
+            subFolderOptions: {}, // define subFolderOptions as an empty object
+        }
+    },
+    methods: {
+        addNewSubFolder() {
+            if (this.newSubFolder) {
+                // ensure that this.subFolderOptions[this.form.folder] is an array before pushing the new subfolder
+                if (!Array.isArray(this.subFolderOptions[this.form.folder])) {
+                    this.subFolderOptions[this.form.folder] = [];
+                }
+                this.subFolderOptions[this.form.folder].push(this.newSubFolder);
+                this.form.subFolder = this.newSubFolder;
+                this.newSubFolder = '';
+            }
+        },
+        // define the getSubFolderOptions method
+        getSubFolderOptions(folder) {
+            return this.subFolderOptions[folder] || [];
+        }
+    },
+    async created() {
+        // Fetch current folders from the server
+        try {
+            const response = await fetch('/todoList'); // replace with the actual URL
+
+            if (response.ok) {
+                const data = await response.json();
+                this.folderOptions = data.map(todoList => todoList.folder).filter((value, index, self) => self.indexOf(value) === index);
+            } else {
+                console.error(`Error ${response.status} fetching folders`);
+            }
+        } catch (error) {
+            console.error("Error fetching folders:", error);
+        }
+    },
+
+
         setup(props) {
             const form = useForm({
             name: '',
