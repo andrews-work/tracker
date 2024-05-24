@@ -1,7 +1,7 @@
 <!-- resources/js/Components/Todo/Sidebar.vue -->
 
 <template>
-  <div class="max-w-8xl mx-auto sm:px-6 lg:px-2 my-4 max-w-full max-h-full h-[83vh] p-6">
+  <div class="max-w-8xl mx-auto sm:px-6 lg:px-2 my-4 max-w-full max-h-full h-[83vh] p-6 flex-col">
     <nav class="bg-white border-b border-gray-100 items-center">
       <button @click="onClickListForm" class="bg-white hover:underline text-black font-bold py-1 rounded mb-8">
         Create New List
@@ -11,56 +11,75 @@
       </button>
     </nav>
     <div v-if="showShowList">
-      <div class="mt-4">
-        <h2 class="text-lg font-semibold">Categories</h2>
-        <div class="flex flex-wrap">
-          <button @click="filterLists('personal')" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
+      <details class="mt-4">
+        <summary>
+  <i class="fas fa-folder"></i>
+  <span>Categories</span>
+</summary>
+
+        <div class="flex flex-col flex-wrap dropdown-menu">
+          <!-- Content for categories -->
+          <button @click="filterLists('personal')" class="sidebar-item bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
             Personal
           </button>
-          <button @click="filterLists('friends')" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
+          <button @click="filterLists('friends')" class="sidebar-item bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
             Mates
           </button>
-          <button @click="filterLists('family')" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
+          <button @click="filterLists('family')" class="sidebar-item bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
             Family
           </button>
-          <button @click="filterLists('business')" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
+          <button @click="filterLists('business')" class="sidebar-item bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
             Business
           </button>
         </div>
-      </div>
-      <div class="mt-4">
-        <h2 class="text-lg font-semibold">Tags</h2>
-        <div class="flex flex-wrap">
-          <!-- Dynamically render buttons for each tag -->
-          <button v-for="tag in tags" :key="tag" @click="filterListsByTag(tag)" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
+      </details>
+
+      <details class="mt-4">
+        <summary>
+          <i class="fas fa-tags"></i>
+          <span>Tags</span>
+        </summary>
+        <div class="flex flex-col flex-wrap dropdown-menu">
+          <!-- Content for tags -->
+          <button v-for="tag in tags" :key="tag" @click="filterListsByTag(tag)" class="sidebar-item bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
             {{ tag }}
           </button>
         </div>
-      </div>
-      <div class="mt-4">
-        <h2 class="text-lg font-semibold">Folders</h2>
-        <div class="flex flex-wrap">
-          <!-- Dynamically render buttons for each folder -->
-          <button v-for="folder in folders" :key="folder" @click="filterListsByFolder(folder)" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
+      </details>
+
+      <details class="mt-4">
+        <summary>
+          <i class="fas fa-folder"></i>
+          <span>Folders</span>
+        </summary>
+        <div class="flex flex-col flex-wrap dropdown-menu">
+          <!-- Content for folders -->
+          <button v-for="folder in folders" :key="folder" @click="filterListsByFolder(folder)" class="sidebar-item bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
             {{ folder }}
           </button>
         </div>
-      </div>
-      <div class="mt-4">
-        <h2 class="text-lg font-semibold">Colors</h2>
-        <div class="flex flex-wrap">
-          <!-- Dynamically render buttons for each color -->
-          <button v-for="color in colors" :key="color" @click="filterListsByColor(color)" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
+      </details>
+
+      <details class="mt-4">
+        <summary>
+          <i class="fas fa-palette"></i>
+          <span>Colors</span>
+        </summary>
+        <div class="flex flex-col flex-wrap dropdown-menu">
+          <!-- Content for colors -->
+          <button v-for="color in colors" :key="color" @click="filterListsByColor(color)" class="sidebar-item bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
             {{ color }}
           </button>
         </div>
-      </div>
+      </details>
     </div>
   </div>
 </template>
 
+
 <script setup>
 import { inject, ref, onMounted } from 'vue'
+import { faFolder } from '@fortawesome/free-solid-svg-icons'
 
 const showListForm = inject('showListForm')
 const showShowList = inject('showShowList')
@@ -101,7 +120,7 @@ const filterListsByFolder = (folder) => {
   showSelectLists.value = true
   showShowList.value = false
   showListForm.value = false
-  selectedCategory.value = { type: 'folder', value: folder } 
+  selectedCategory.value = { type: 'folder', value: folder }
   console.log(`Filter lists by folder: ${folder}`)
 }
 
@@ -138,3 +157,64 @@ onMounted(() => {
     })
 })
 </script>
+
+<style scoped>
+/* Add styles for sidebar items */
+.sidebar-item {
+  width: 150px;
+  height: 40px;
+}
+
+/* Adjust dropdown header styles */
+summary {
+  outline: none;
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5rem 1rem; /* Adjust padding */
+  margin: 0.5rem -1rem; /* Adjust margin */
+}
+
+/* Move the arrow to the right side */
+summary .arrow {
+  font-size: 1em;
+  transition: transform 0.3s ease;
+}
+
+summary > .arrow {
+  order: 3; /* Move the arrow to the end */
+}
+
+details[open] > summary > .arrow {
+  transform: rotate(90deg); /* Rotate the arrow */
+}
+
+/* Styles for the vertical line */
+.dropdown-header {
+    position: relative;
+    padding-left: 4px;
+  }
+
+  details[open] .dropdown-header {
+    border-left: 2px solid #e70000;
+  }
+
+  /* Adjust the height of the pseudo-element to match the height of the dropdown menu */
+  details[open] .dropdown-menu {
+    position: relative;
+  }
+
+  details[open] .dropdown-menu::before {
+    content: "";
+    display: block;
+    position: absolute;
+    left: -2px;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background-color: #6d6d6d;
+    margin-left: 1vw;
+  }
+</style>

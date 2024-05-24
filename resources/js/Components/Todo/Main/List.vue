@@ -6,7 +6,7 @@
         <div v-for="list in todoList" :key="list.id" class="todo-list">
   
           <!-- card -->
-          <div v-if="!list.showSettings" :class="['p-4','border',`border-${list.borderColor}`,`bg-${list.bgColor}`,'rounded-lg','shadow-md','flex','flex-col','space-y-','w-[15vw]','h-[40vh]','relative']">
+          <div v-if="!list.showSettings" :class="['p-4','border',`border-${list.borderColor}`,`bg-${list.bgColor}`,'rounded-lg','shadow-md','flex','flex-col','space-y-','w-[15vw]','h-[50vh]','relative']">
   
             <!-- nav -->
             <div class="min-h-[2vh] flex justify-between items-center pb-4">  
@@ -35,7 +35,7 @@
             </div>
   
             <!-- list items -->
-            <div class="min-h-[24vh] overflow-y-scroll">
+            <div class="min-h-[34vh] overflow-y-scroll">
                 <div v-for="(item, itemIndex) in list.items" :key="itemIndex">
                     <!-- Add the 'editing' property here -->
                     <div v-if="!list.items[itemIndex].editing" @click="list.items[itemIndex].editing = !list.items[itemIndex].editing">
