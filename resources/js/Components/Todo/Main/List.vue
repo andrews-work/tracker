@@ -73,11 +73,30 @@
           </div>
   
           <!-- card settings -->
-          <div v-if="list.showSettings" :class="['p-4','border',`border-${list.borderColor}`,`bg-${list.bgColor}`,'rounded-lg','shadow-md','flex','flex-col','space-y-2','w-[15vw]','h-[40vh]','relative']">
+          <div v-if="list.showSettings" :class="['p-4','border',`border-${list.borderColor}`,`bg-${list.bgColor}`,'rounded-lg','shadow-md','flex','flex-col','space-y-2','w-[15vw]','h-[50vh]','relative']">
   
             <!-- delete list icon -->
-            <div>
-              <font-awesome-icon class="trash-icon" :icon="['fas', 'trash']" @click="deleteList(list.id)" />
+            <div class="flex justify-between">
+              <!-- left -->
+              <div>
+                <button @click="list.showSettings = !list.showSettings">
+                  <font-awesome-icon class="settings-icon" :icon="['fas', 'gear']" :style="{ color: getImportanceColor(list.importance) }" />
+                </button>
+              </div>
+              <!-- right? -->
+              <div>
+                <font-awesome-icon class="trash-icon" :icon="['fas', 'trash']" @click="deleteList(list.id)" />
+              </div>
+            </div>
+
+            <div class="border border-grey-400 h-auto">
+              <h2 class="text-md">Category</h2>
+              <select v-model="list.category">
+                <option value="mates">Mates</option>
+                <option value="family">Family</option>
+                <option value="business">Business</option>
+                <option value="personal">Personal</option>
+              </select>
             </div>
   
             <!-- folder -->
@@ -98,14 +117,20 @@
               <input type="text" v-model="list.tag">
             </div>
   
-            <!-- importance -->
-            <div class="border border-grey-400 h-auto">
-              <h2 class="text-md">Importance</h2>
-              <input type="text" v-model="list.importance">
-            </div>
+<!-- importance -->
+<div class="border border-grey-400 h-auto">
+  <h2 class="text-md">Importance</h2>
+  <select v-model="list.importance">
+    <option value="">Select importance</option>
+    <option value="high">High</option>
+    <option value="middle">Middle</option>
+    <option value="low">Low</option>
+  </select>
+</div>
+
   
             <!-- settings button -->
-            <button @click="list.showSettings = !list.showSettings">Hide Settings</button>
+            
   
           </div>
   

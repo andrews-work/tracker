@@ -1,7 +1,7 @@
 <!-- resources/js/Components/Todo/Sidebar.vue -->
 
 <template>
-  <div class="max-w-8xl mx-auto sm:px-6 lg:px-2 my-4 max-w-full max-h-full h-[83vh] p-6 flex-col">
+  <div class="max-w-8xl mx-auto sm:px-6 lg:px-2 my-4 max-w-full max-h-full h-[83vh] p-6 flex-col overflow-y-scroll">
     <nav class="bg-white border-b border-gray-100 items-center">
       <button @click="onClickListForm" class="bg-white hover:underline text-black font-bold py-1 rounded mb-8">
         Create New List
@@ -13,9 +13,9 @@
     <div v-if="showShowList">
       <details class="mt-4">
         <summary>
-  <i class="fas fa-folder"></i>
-  <span>Categories</span>
-</summary>
+          <i class="fas fa-folder"></i>
+          <span>Categories</span>
+        </summary>
 
         <div class="flex flex-col flex-wrap dropdown-menu">
           <!-- Content for categories -->
@@ -54,7 +54,13 @@
         </summary>
         <div class="flex flex-col flex-wrap dropdown-menu">
           <!-- Content for folders -->
-          <button v-for="folder in folders" :key="folder" @click="filterListsByFolder(folder)" class="sidebar-item bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
+          <button
+            v-for="folder in folders"
+            :key="folder"
+            v-if="folder && folder.trim() !== ''"
+            @click="filterListsByFolder(folder)"
+            class="sidebar-item bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1"
+          >
             {{ folder }}
           </button>
         </div>
@@ -163,6 +169,7 @@ onMounted(() => {
 .sidebar-item {
   width: 150px;
   height: 40px;
+  text-align: left; /* Align text to the left */
 }
 
 /* Adjust dropdown header styles */
@@ -197,13 +204,10 @@ details[open] > summary > .arrow {
     padding-left: 4px;
   }
 
-  details[open] .dropdown-header {
-    border-left: 2px solid #e70000;
-  }
-
   /* Adjust the height of the pseudo-element to match the height of the dropdown menu */
   details[open] .dropdown-menu {
     position: relative;
+    padding-left: 2vw;
   }
 
   details[open] .dropdown-menu::before {
@@ -214,7 +218,7 @@ details[open] > summary > .arrow {
     top: 0;
     height: 100%;
     width: 2px;
-    background-color: #6d6d6d;
-    margin-left: 1vw;
+    background-color: #d5d5d5;
+    margin-left: 0.33vw;
   }
 </style>
