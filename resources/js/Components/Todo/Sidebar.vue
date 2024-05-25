@@ -54,13 +54,7 @@
         </summary>
         <div class="flex flex-col flex-wrap dropdown-menu">
           <!-- Content for folders -->
-          <button
-            v-for="folder in folders"
-            :key="folder"
-            v-if="folder && folder.trim() !== ''"
-            @click="filterListsByFolder(folder)"
-            class="sidebar-item bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1"
-          >
+          <button v-for="folder in folders" :key="folder" @click="filterListsByFolder(folder)" class="sidebar-item bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full m-1">
             {{ folder }}
           </button>
         </div>
