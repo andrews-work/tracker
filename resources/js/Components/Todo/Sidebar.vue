@@ -79,7 +79,6 @@
 
 <script setup>
 import { inject, ref, onMounted } from 'vue'
-import { faFolder } from '@fortawesome/free-solid-svg-icons'
 
 const showListForm = inject('showListForm')
 const showShowList = inject('showShowList')
@@ -106,6 +105,7 @@ const filterLists = (category) => {
   showSelectLists.value = true
   showShowList.value = false
   showListForm.value = false
+  selectedCategory.value = { type: 'category', value: category }; // Update the selectedCategory value
   console.log(`Filter lists by category: ${category}`)
 }
 

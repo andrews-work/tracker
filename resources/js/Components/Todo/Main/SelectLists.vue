@@ -1,5 +1,3 @@
-<!-- resources/js/Components/Todo/Main/SelectLists.vue -->
-
 <template>
   <div class="flex space-x-2 py-2 overflow-x-scroll">
     <div class="flex" v-if="getFilteredLists().length > 0">
@@ -11,12 +9,10 @@
   </div>
 </template>
 
-
 <script setup>
 import { inject, defineProps, ref, computed } from 'vue'
 import List from './List.vue'
 
-const showSelectLists = inject('showSelectLists')
 const selectedCategory = inject('selectedCategory')
 const todoList = inject('todoList')
 
@@ -24,37 +20,30 @@ defineProps({
   todoList: Array,
 })
 
-const filterListsByCategory = (category) => {
-  return todoList.value.filter(list => {
-    if (selectedCategory.value) {
-      switch (selectedCategory.value.type) {
-        case 'category':
-          return list.category === selectedCategory.value.value
-        case 'tag':
-          return list.tags.includes(selectedCategory.value.value)
-        case 'color':
-          return list.color === selectedCategory.value.value
-        case 'folder':
-          return list.folder === selectedCategory.value.value
-        default:
-          return false
-      }
-    } else {
-      return list.category === category
+const filterListsByCategory = () => {
+  if (selectedCategory.value) {
+    switch (selectedCategory.value.type) {
+      case 'category':
+        return todoList.value.filter(list => list.category === selectedCategory.value.value)
+      case 'tag':
+        return todoList.value.filter(list => list.tags.includes(selectedCategory.value.value))
+      case 'color':
+        return todoList.value.filter(list => list.color === selectedCategory.value.value)
+      case 'folder':
+        return todoList.value.filter(list => list.folder === selectedCategory.value.value)
+      default:
+        return []
     }
-  })
+  } else {
+    return []
+  }
 }
 
-const filteredLists = computed(() => {
-  if (selectedCategory.value) {
-    return filterListsByCategory(selectedCategory.value)
-  }
-  return []
-})
+const filteredLists = computed(() => filterListsByCategory())
 
 const getFilteredLists = () => {
   if (selectedCategory.value) {
-    const result = filterListsByCategory(selectedCategory.value)
+    const result = filterListsByCategory()
     console.log(result)
     return result
   }
