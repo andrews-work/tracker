@@ -22,6 +22,13 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// bank
+Route::get('/bank', function () {
+    return Inertia::render('Bank', [
+        'layout' => 'Layouts.TodoLayout',
+    ]);
+})->middleware(['auth', 'verified'])->name('bank');
+
 // todo
 Route::get('/todo', function () {
     return Inertia::render('Todo', [

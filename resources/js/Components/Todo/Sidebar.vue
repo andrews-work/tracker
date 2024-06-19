@@ -2,9 +2,9 @@
 
 <template>
   <div class="max-w-8xl mx-auto sm:px-6 lg:px-2 my-4 max-w-full max-h-full h-[83vh] p-6 flex-col overflow-y-scroll">
-    <nav class="bg-white border-b border-gray-100 items-center">
+    <nav class="bg-white border-b border-gray-100 items-center flex flex-col">
       <button @click="onClickListForm" class="bg-white hover:underline text-black font-bold py-1 rounded mb-8">
-        Create New List
+        +
       </button>
       <button @click="onClickShowList" class="bg-white hover:underline text-black font-bold py-1 rounded">
         Show Lists

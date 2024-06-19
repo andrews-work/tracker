@@ -109,17 +109,7 @@
                         <label class="block text-gray-700 font-bold mb-2" for="items">
                             Items
                         </label>
-                        <div class="flex items-center">
-                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="items" type="text" v-model="newItem" @keydown.enter="addItem($event)">
-                            <button class="ml-2 bg-blue-500 hover text-white font-bold py-2 px-4 rounded focus focus" @click="addItem">
-                                +
-                            </button>
-                        </div>
-                        <ul class="flex flex-col">
-                            <li v-for="(item, index) in form.items" :key="index">
-                            {{ item }} <button @click="removeItem(index)">Remove</button>
-                            </li>
-                        </ul>
+                        <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="items" rows="4" v-model="form.items"></textarea>
                     </div>
                 </div>
 
@@ -138,133 +128,96 @@
     </div>
 </template>
 
+  
 <script>
 import { ref, onMounted } from 'vue'
 import { useForm } from '@inertiajs/vue3';
 
 export default {
-    data() {
-        return {
-            newSubFolder: '',
-            folderOptions: [], // define folderOptions as an empty array
-            subFolderOptions: {}, // define subFolderOptions as an empty object
+  setup(props) {
+    const form = useForm({
+      name: '',
+      category: '',
+      importance: '',
+      date: '',
+      color: '',
+      folder: '',
+      subFolder: '',
+      tag: '',
+      items: '',
+    })
+
+    const nameInput = ref(null)
+    const categorySelect = ref(null)
+
+    onMounted(() => {
+      nameInput.value = document.querySelector('#name')
+      categorySelect.value = document.querySelector('#category')
+    })
+
+    const createList = () => {
+        if (!nameInput.value.checkValidity()) {
+            nameInput.value.reportValidity();
+            return;
         }
-    },
-    methods: {
-        addNewSubFolder() {
-            if (this.newSubFolder) {
-                // ensure that this.subFolderOptions[this.form.folder] is an array before pushing the new subfolder
-                if (!Array.isArray(this.subFolderOptions[this.form.folder])) {
-                    this.subFolderOptions[this.form.folder] = [];
-                }
-                this.subFolderOptions[this.form.folder].push(this.newSubFolder);
-                this.form.subFolder = this.newSubFolder;
-                this.newSubFolder = '';
-            }
-        },
-        // define the getSubFolderOptions method
-        getSubFolderOptions(folder) {
-            return this.subFolderOptions[folder] || [];
+
+        if (categorySelect.value.value === '') {
+            alert('Please select a category');
+            return;
         }
-    },
-    async created() {
-        // Fetch current folders from the server
-        try {
-            const response = await fetch('/todoList'); // replace with the actual URL
 
-            if (response.ok) {
-                const data = await response.json();
-                this.folderOptions = data.map(todoList => todoList.folder).filter((value, index, self) => self.indexOf(value) === index);
-            } else {
-                console.error(`Error ${response.status} fetching folders`);
+        console.log('Submitting form...');
+
+        form.post('/todoList', {
+            onSuccess: (response) => {
+            console.log('Form submitted successfully:', response);
+            router.push('/todo');
+            },
+            onError: (errors) => {
+            console.error('Error submitting form:', errors);
             }
-        } catch (error) {
-            console.error("Error fetching folders:", error);
-        }
-    },
+        });
+    };
 
-
-        setup(props) {
-            const form = useForm({
-            name: '',
-            category: '',
-            importance: '',
-            date: '',
-            color: '',
-            folder: '',
-            subFolder: '',
-            tag: '',
-            items: [],
-            })
-
-            const nameInput = ref(null)
-            const categorySelect = ref(null)
-
-            onMounted(() => {
-                nameInput.value = document.querySelector('#name')
-                categorySelect.value = document.querySelector('#category')
-            })
-
-            const createList = () => {
-                if (!nameInput.value.checkValidity()) {
-                    nameInput.value.reportValidity();
-                    return;
-                }
-
-                if (categorySelect.value.value === '') {
-                    alert('Please select a category');
-                    return;
-                }
-
-                form.post('/todoList', {
-                    onSuccess: () => {
-                        console.log('List created successfully');
-                        router.push('/todo');
-                    },
-                    onError: (errors) => {
-                        console.error(errors);
-                    }
-                });
-            };
-
-            // add new item
-            const newItem = ref('')
-            const addItem = (event) => {
-                if (newItem.value.trim()) {
-                    form.items.push(newItem.value.trim());
-                    newItem.value = '';
-                }
-                event.preventDefault();
-            }
-
-            // remove item
-            const removeItem = (index) => {
-                form.items.splice(index, 1);
-            }
-
-            // cancel form
-            const cancel = () => {
-                form.name = '';
-                form.category = '';
-                form.importance = '';
-                form.date = '';
-                form.color = '';
-                form.items = [];
-                form.folder = '';
-                form.subFolder = '';
-                form.tag = '';
-                newItem.value = '';
-            };
-
-            return {
-                form,
-                createList,
-                categories: props.categories,
-                cancel,
-                newItem,
-                addItem,
-                removeItem,
-            }
-        },
+    // add new item
+    const newItem = ref('')
+    const addItem = (event) => {
+      if (newItem.value.trim()) {
+        form.items.push(newItem.value.trim());
+        newItem.value = '';
+      }
+      event.preventDefault();
     }
+
+    // remove item
+    const removeItem = (index) => {
+      form.items.splice(index, 1);
+    }
+
+    // cancel form
+    const cancel = () => {
+      form.name = '';
+      form.category = '';
+      form.importance = '';
+      form.date = '';
+      form.color = '';
+      form.items = '';
+      form.folder = '';
+      form.subFolder = '';
+      form.tag = '';
+      newItem.value = '';
+    };
+
+    return {
+      form,
+      createList,
+      categories: props.categories,
+      cancel,
+      newItem,
+      addItem,
+      removeItem,
+    }
+  },
+}
 </script>
+  

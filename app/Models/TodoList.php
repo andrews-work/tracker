@@ -21,5 +21,6 @@ class TodoList extends Model {
         'folder',
         'subFolder',
         'user_id',
+        'pdf',
     ];
 }

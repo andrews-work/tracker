@@ -23,29 +23,26 @@
     fetch('/todoList')
         .then(response => response.json())
         .then(data => {
-            todoList.value = data.map(list => {
-                let items = []
+        todoList.value = data.map(list => {
+            let items = []
 
-                if (typeof list.items === 'string') {
-                    try {
-                        items = JSON.parse(list.items)
-                    } catch (error) {
-                        console.error(error)
-                    }
-                } else if (Array.isArray(list.items)) {
-                    items = list.items
-                }
+            if (typeof list.items === 'string') {
+            items = list.items.split('\n') // Split the string by newline characters instead of parsing it as JSON
+            } else if (Array.isArray(list.items)) {
+            items = list.items
+            }
 
-                return {
-                    ...list,
-                    items
-                }
-            })
+            return {
+            ...list,
+            items
+            }
+        })
         })
         .catch(error => {
-            console.error(error)
+        console.error(error)
         })
     })
+
 </script>
 
 <template>
